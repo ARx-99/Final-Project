@@ -28,23 +28,23 @@ class BMICalculatorFrame(tk.Frame):
             self.config(bg="#f0f0f0")
             self.bg_image_raw = None
 
-        # Load and set side image
-        try:
-            self.side_image_raw = Image.open(controller.config['bmi_side_image'])
-            self.side_image_tk = None # Will be set on resize
-            self.side_label = tk.Label(self, image=None, bg=self.controller.config['content_bg_color'])
-            self.side_label.place(relx=0.02, rely=0.1, relwidth=0.2, relheight=0.8) # Position on left
-            self.bind("<Configure>", self._resize_side_image)
-        except FileNotFoundError:
-            messagebox.showerror("Image Error", f"Side image not found: {controller.config['bmi_side_image']}")
-            self.side_image_raw = None
-        except Exception as e:
-            messagebox.showerror("Image Error", f"Error loading side image: {e}")
-            self.side_image_raw = None
+        # Removed: Load and set side image
+        # try:
+        #     self.side_image_raw = Image.open(controller.config['bmi_side_image'])
+        #     self.side_image_tk = None # Will be set on resize
+        #     self.side_label = tk.Label(self, image=None, bg=self.controller.config['content_bg_color'])
+        #     self.side_label.place(relx=0.02, rely=0.1, relwidth=0.2, relheight=0.8) # Position on left
+        #     self.bind("<Configure>", self._resize_side_image)
+        # except FileNotFoundError:
+        #     messagebox.showerror("Image Error", f"Side image not found: {controller.config['bmi_side_image']}")
+        #     self.side_image_raw = None
+        # except Exception as e:
+        #     messagebox.showerror("Image Error", f"Error loading side image: {e}")
+        #     self.side_image_raw = None
 
-        # Content frame
+        # Content frame - Adjusted relwidth to be larger
         content_frame = tk.Frame(self, bg=self.controller.config['content_bg_color'], bd=5, relief="groove")
-        content_frame.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.4, relheight=0.6)
+        content_frame.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.6)
 
 
         tk.Label(content_frame, text="BMI Calculator", font=("Inter", 20, "bold"), bg=self.controller.config['content_bg_color'], fg=self.controller.config['text_color']).pack(pady=20)
@@ -75,15 +75,15 @@ class BMICalculatorFrame(tk.Frame):
                 self.bg_label.config(image=self.bg_image_tk)
                 self.bg_label.image = self.bg_image_tk
 
-    def _resize_side_image(self, event):
-        if self.side_image_raw:
-            frame_width = self.side_label.winfo_width()
-            frame_height = self.side_label.winfo_height()
-            if frame_width > 0 and frame_height > 0:
-                resized_image = self.side_image_raw.resize((frame_width, frame_height), Image.Resampling.LANCZOS)
-                self.side_image_tk = ImageTk.PhotoImage(resized_image)
-                self.side_label.config(image=self.side_image_tk)
-                self.side_label.image = self.side_image_tk
+    # Removed: def _resize_side_image(self, event):
+    #     if self.side_image_raw:
+    #         frame_width = self.side_label.winfo_width()
+    #         frame_height = self.side_label.winfo_height()
+    #         if frame_width > 0 and frame_height > 0:
+    #             resized_image = self.side_image_raw.resize((frame_width, frame_height), Image.Resampling.LANCZOS)
+    #             self.side_image_tk = ImageTk.PhotoImage(resized_image)
+    #             self.side_label.config(image=self.side_image_tk)
+    #             self.side_label.image = self.side_image_tk
 
     def _calculate_bmi(self):
         try:

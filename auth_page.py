@@ -7,7 +7,7 @@ import os
 
 class AuthFrame(tk.Frame):
     """Base class for authentication frames, handling common elements like background/side images."""
-    def __init__(self, parent, controller, bg_image_path, side_image_path):
+    def __init__(self, parent, controller, bg_image_path): # Removed side_image_path
         super().__init__(parent)
         self.controller = controller
 
@@ -27,23 +27,24 @@ class AuthFrame(tk.Frame):
             self.config(bg="#f0f0f0")
             self.bg_image_raw = None
 
-        # Load and set side image
-        try:
-            self.side_image_raw = Image.open(side_image_path)
-            self.side_image_tk = None # Will be set on resize
-            self.side_label = tk.Label(self, image=None, bg="#e0e0e0") # Set a temporary background for the label
-            self.side_label.place(relx=0.02, rely=0.1, relwidth=0.2, relheight=0.8) # Position on left
-            self.bind("<Configure>", self._resize_side_image)
-        except FileNotFoundError:
-            messagebox.showerror("Image Error", f"Side image not found: {side_image_path}")
-            self.side_image_raw = None
-        except Exception as e:
-            messagebox.showerror("Image Error", f"Error loading side image: {e}")
-            self.side_image_raw = None
+        # Removed: Load and set side image
+        # try:
+        #     self.side_image_raw = Image.open(side_image_path)
+        #     self.side_image_tk = None # Will be set on resize
+        #     self.side_label = tk.Label(self, image=None, bg="#e0e0e0") # Set a temporary background for the label
+        #     self.side_label.place(relx=0.02, rely=0.1, relwidth=0.2, relheight=0.8) # Position on left
+        #     self.bind("<Configure>", self._resize_side_image)
+        # except FileNotFoundError:
+        #     messagebox.showerror("Image Error", f"Side image not found: {side_image_path}")
+        #     self.side_image_raw = None
+        # except Exception as e:
+        #     messagebox.showerror("Image Error", f"Error loading side image: {e}")
+        #     self.side_image_raw = None
 
         # Placeholder for content frame to ensure it's on top of images
+        # Adjusted relwidth to be larger since side image is removed
         self.content_frame = tk.Frame(self, bg=self.controller.config['content_bg_color'], bd=5, relief="groove")
-        self.content_frame.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.4, relheight=0.6)
+        self.content_frame.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.6) # Increased width
 
 
     def _resize_background(self, event):
@@ -56,24 +57,22 @@ class AuthFrame(tk.Frame):
                 self.bg_label.config(image=self.bg_image_tk)
                 self.bg_label.image = self.bg_image_tk # Keep a reference!
 
-    def _resize_side_image(self, event):
-        if self.side_image_raw:
-            # Calculate new size based on the content_frame's actual dimensions or a fixed ratio
-            # Using content_frame's parent (self) dimensions for side image placement
-            frame_width = self.side_label.winfo_width() # Get current width of the side_label
-            frame_height = self.side_label.winfo_height() # Get current height of the side_label
-
-            if frame_width > 0 and frame_height > 0:
-                resized_image = self.side_image_raw.resize((frame_width, frame_height), Image.Resampling.LANCZOS)
-                self.side_image_tk = ImageTk.PhotoImage(resized_image)
-                self.side_label.config(image=self.side_image_tk)
-                self.side_label.image = self.side_image_tk # Keep a reference!
+    # Removed: def _resize_side_image(self, event):
+    #     if self.side_image_raw:
+    #         frame_width = self.side_label.winfo_width() # Get current width of the side_label
+    #         frame_height = self.side_label.winfo_height() # Get current height of the side_label
+    #
+    #         if frame_width > 0 and frame_height > 0:
+    #             resized_image = self.side_image_raw.resize((frame_width, frame_height), Image.Resampling.LANCZOS)
+    #             self.side_image_tk = ImageTk.PhotoImage(resized_image)
+    #             self.side_label.config(image=self.side_image_tk)
+    #             self.side_label.image = self.side_image_tk # Keep a reference!
 
 
 class LoginFrame(AuthFrame):
     """Login page frame."""
     def __init__(self, parent, controller):
-        super().__init__(parent, controller, controller.config['login_bg_image'], controller.config['login_side_image'])
+        super().__init__(parent, controller, controller.config['login_bg_image']) # Removed side image path
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
@@ -119,7 +118,7 @@ class LoginFrame(AuthFrame):
 class SignupFrame(AuthFrame):
     """Signup page frame."""
     def __init__(self, parent, controller):
-        super().__init__(parent, controller, controller.config['signup_bg_image'], controller.config['signup_side_image'])
+        super().__init__(parent, controller, controller.config['signup_bg_image']) # Removed side image path
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
